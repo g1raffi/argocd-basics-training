@@ -9,8 +9,12 @@
   "author": "acend gmbh",
   "scripts": {
     "start": "bash -c \"docker run --rm --interactive --publish 8080:8080 -v $(pwd):/src:Z klakegg/hugo:$(grep \"FROM klakegg/hugo\" Dockerfile | sed 's/FROM klakegg\\/hugo://g' | sed 's/ AS builder//g') server -p 8080 --bind 0.0.0.0\"",
+    "start-hugo": "exec-bin node_modules/.bin/hugo/hugo server --logLevel info  --bind=0.0.0.0 --disableFastRender --baseURL=http://localhost",
     "mdlint": "markdownlint --config .markdownlint.json content *.md",
-    "prepare": "husky install"
+    "mdlint-fix": "npm run mdlint -- --fix",
+    "prepare": "husky install",
+    "build": "exec-bin node_modules/.bin/hugo/hugo --gc --minify",
+    "postinstall": "hugo-installer --version otherDependencies.hugo --extended --destination node_modules/.bin/hugo"
   },
   "bugs": {
     "url": "https://github.com/acend/argocd-basics-training/issues"
@@ -18,6 +22,18 @@
   "homepage": "https://github.com/acend/argocd-basics-training#readme",
   "devDependencies": {
     "husky": "9.1.7",
-    "markdownlint-cli": "0.44.0"
+    "lint-staged": "15.2.10",
+    "markdownlint-cli": "0.44.0",
+    "autoprefixer": "^10.4",
+    "postcss": "^8.4",
+    "postcss-cli": "^11.0",
+    "exec-bin": "^1.0.0",
+    "hugo-installer": "^4.0"
+  },
+  "otherDependencies": {
+    "hugo": "0.143.1"
+  },
+  "lint-staged": {
+    "*.md": "markdownlint --config .markdownlint.json --fix"
   }
 }
